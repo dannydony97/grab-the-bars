@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "grab-the-bars",
+    "slug": "grab-the-bars",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "grab-the-bars"
+}
