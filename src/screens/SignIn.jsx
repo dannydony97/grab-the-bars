@@ -1,6 +1,7 @@
 import React from "react";
 import { KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, StyleSheet } from "react-native";
 import { View, Text, Incubator, Colors, Checkbox, Button } from 'react-native-ui-lib';
+import { useAuth } from "../providers/AuthProvider";
 const { TextField } = Incubator;
 
 const SignIn = ({navigation}) => {
@@ -8,6 +9,12 @@ const SignIn = ({navigation}) => {
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [keepSignedIn, setKeepSignedIn] = React.useState(false);
+
+  const { signIn } = useAuth();
+
+  const onSignInButtonPressed = () => {
+    signIn(emailAddress, password);
+  }
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
@@ -43,7 +50,7 @@ const SignIn = ({navigation}) => {
             <Button
               label="SIGN IN"
               enableShadow
-              onPress={() => console.log("Button pressed")}
+              onPress={onSignInButtonPressed}
             />
             <Button
               style={styles.forgotTextButton}
