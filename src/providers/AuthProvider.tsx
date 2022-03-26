@@ -1,4 +1,5 @@
 import React from "react";
+import Realm from "realm";
 import app from "../../realmApp";
 
 const AuthContext = React.createContext(null);
@@ -9,8 +10,13 @@ const AuthProvider = ({ children }) => {
 
   const signIn = async (email: string, password: string) => {
     const credentials = Realm.Credentials.emailPassword(email, password);
-    const newUser = await app.logIn(credentials);
-    setUser(newUser);
+
+    try {
+      const newUser = await app.logIn(credentials);
+      setUser(newUser);
+    } catch(err) {
+      console.error(err);
+    }
 
     //console.log(app, newUser.accessToken);
   };
