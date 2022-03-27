@@ -1,21 +1,40 @@
+import CameraRoll from "@react-native-community/cameraroll";
 import React from "react";
-import { CameraRoll } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { Text, View } from "react-native-ui-lib";
+import { Image, View } from "react-native-ui-lib";
 
 const NewPost = ({ navigation }) => {
 
-    React.useEffect(() => {
-        CameraRoll.getPhotos
+  const [photos, setPhotos] = React.useState([]);
+
+  React.useEffect(async () => {
+    await getAlbums();
+  }, []);
+
+  React.useEffect(() => {
+    console.log(photos);
+  }, [photos])
+
+  const getAlbums = async () => {
+    const result = await CameraRoll.getPhotos({
+      first: 50,
+      assetType: "Photos"
     });
+    setPhotos(result.edges);
 
-    return (
-        <View>
-            <ScrollView>
+    const uri = result.edges[0].node.image.uri;
+    console.log(uri);
+  }
 
-            </ScrollView>
-        </View>
-    );
+  return (
+    <View>
+      <ScrollView>
+        {photos.map((photo, index) => {
+          return <Image key={index} style={{width: 100, height: 100}} source={{ uri: photo.node.image.uri }} />
+        })}
+      </ScrollView>
+    </View>
+  );
 };
 
 export default NewPost;
