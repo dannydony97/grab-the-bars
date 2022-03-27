@@ -9,26 +9,20 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = React.useState(app.currentUser);
 
   const signIn = async (email: string, password: string) => {
+
     const credentials = Realm.Credentials.emailPassword(email, password);
+    const newUser = await app.logIn(credentials);
+    setUser(newUser);
 
-    try {
-      const newUser = await app.logIn(credentials);
-      setUser(newUser);
-    } catch(err) {
-      console.error(err);
-    }
-
-    //console.log(app, newUser.accessToken);
   };
 
-  const registerUser = async (email: string, password: string) => {
+  const registerUser = async (username: string, email: string, password: string) => {
 
-    try {
-      const res = await app.emailPasswordAuth.registerUser({email, password});
-      console.log("User registration succedded!", res);
-    } catch(err) {
-      console.error(err);
-    }
+    await app.emailPasswordAuth.registerUser({email, password});
+    console.log("User registration succedded!");
+      
+    const currentUser = app.currentUser;
+    currentUser.profile.name = username;
   };
 
   return (

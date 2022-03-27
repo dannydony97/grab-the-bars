@@ -49,11 +49,15 @@ const SignUp = ({ navigation }) => {
 
       if(!repeatValidPassword || !repeatPassword.length)
         throw("Password error! Please check!");
-       
-      registerUser(emailAddress, password);
 
     } catch(err) {
-      Alert.alert(err);
+      Alert.alert("Error", err);
+    }
+
+    try {
+      registerUser(userName, emailAddress, password);
+    } catch(err) {
+      Alert.alert("Error", err.message);
     }
 
   };

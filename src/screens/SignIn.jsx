@@ -1,5 +1,5 @@
 import React from "react";
-import { KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, StyleSheet } from "react-native";
+import { KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, StyleSheet, Alert } from "react-native";
 import { View, Text, Incubator, Colors, Checkbox, Button } from 'react-native-ui-lib';
 import { useAuth } from "../providers/AuthProvider";
 const { TextField } = Incubator;
@@ -12,8 +12,14 @@ const SignIn = ({navigation}) => {
 
   const { signIn } = useAuth();
 
-  const onSignInButtonPressed = () => {
-    signIn(emailAddress, password);
+  const onSignInButtonPressed = async () => {
+
+    try{
+      await signIn(emailAddress, password);
+      navigation.navigate("Home", {screen: "Feed"});
+    } catch(err) {
+      Alert.alert("Error", err.message);
+    }
   }
 
   return (
