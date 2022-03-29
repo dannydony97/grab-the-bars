@@ -12,16 +12,28 @@ interface PhotoProps {
 const Photo = (props: PhotoProps) => {
 
   const [photoStyle, setPhotoStyle] = React.useState({});
+  const [selected, setSelected] = React.useState(false);
 
   const onPhotoPress = () => {
     props.onPress(props.photoUri);
 
     if(props.select !== undefined && props.select === true) {
-      setPhotoStyle({
-        ...photoStyle, 
-        borderWidth: 3, 
-        borderColor: Colors.primary
-      });
+
+      if(!selected) {
+        setPhotoStyle({
+          ...photoStyle, 
+          borderWidth: 3, 
+          borderColor: Colors.primary
+        });
+        setSelected(true);
+      } else {
+        setPhotoStyle({
+          ...photoStyle, 
+          borderWidth: 0, 
+          borderColor: Colors.primary
+        });
+        setSelected(false);
+      }
     }
   }
 

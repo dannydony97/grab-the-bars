@@ -19,7 +19,7 @@ const Home = ({ navigation }) => {
         options={({navigation}) => ({
           title: "My Profile",
           headerRight: () => (
-            <Button title="Add" onPress={() => navigation.navigate("NewPost")}/>
+            <Button title="Add" onPress={() => navigation.navigate("SelectPhoto")}/>
           )
         })}
       />

@@ -8,14 +8,14 @@ interface PhotoGridViewProps {
   rowPhotos: number,
   photosUri: Array<string>,
   multiSeletect?: boolean,
-  callbackOnPhotoPress?: (uri: string) => void
+  onPhotoPress?: (uri: string) => void
 }
 
 const PhotoGridView = (props: PhotoGridViewProps) => {
 
   const onPhotoPress = (photoUri: string) => {
-    if(props.callbackOnPhotoPress !== undefined)
-      props.callbackOnPhotoPress(photoUri);
+    if(props.onPhotoPress !== undefined)
+      props.onPhotoPress(photoUri);
   };
 
   const views = [];

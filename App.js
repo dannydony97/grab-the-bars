@@ -5,14 +5,14 @@ import { SafeAreaView } from 'react-native';
 
 
 import { AuthProvider } from './src/providers/AuthProvider';
-import MainRoutes from './src/routes/MainRoutes';
+import ScreensStack from './src/routes/ScreensStack';
 
 export default function App() {
 
   return (
     <AuthProvider>
       <SafeAreaView style={{ flex: 1 }}>
-        <MainRoutes />
+        <ScreensStack />
         <StatusBar style="auto" />
       </SafeAreaView>
     </AuthProvider>
