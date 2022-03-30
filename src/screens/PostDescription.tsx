@@ -1,37 +1,52 @@
 import React from "react";
-import { Button } from "react-native";
-import { Carousel, Image, View } from "react-native-ui-lib";
+import { Button, KeyboardAvoidingView } from "react-native";
+import { Carousel, Image, Incubator, View } from "react-native-ui-lib";
+import ContentView from "../components/ContentView";
+import KeyboardDismiss from "../components/KeyboardDismiss";
+import DefaultStyles from "../styles/DefaultStyles";
 
-const PostDescription = ({route, navigation}) => {
+const { TextField } = Incubator;
 
-    const [photosUri, setPhotosUri] = React.useState<Array<string>>([]);
+const PostDescription = ({ route, navigation }) => {
 
-    React.useEffect(() => {
-        setPhotosUri(route.params.selectedPhotosUri);
+  const [photosUri, setPhotosUri] = React.useState<Array<string>>([]);
+  const [caption, setCaption] = React.useState<string>("");
+
+  React.useEffect(() => {
+    setPhotosUri(route.params.selectedPhotosUri);
+  }, []);
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          title="Share"
+          onPress={() => navigation.navigate("To Doo!")}
+        />
+      ),
     });
+  }, []);
 
-    // React.useEffect(() => {
-    //     navigation.setptions({
-    //         headerRight: () => (
-    //             <Button 
-    //                 title="Share" 
-    //                 onPress={() => navigation.navigate("To Doo!")}
-    //             />
-    //         ),
-    //     });
-    // }, []);
-
-    return (
-        <View flex>
-            <Carousel style={{height: "40%"}} showCounter>
-            {
-                photosUri.map((photoUri: string) => {
-                    return <Image source={{uri: photoUri}} style={{width: "100%", height: "100%", resizeMode: "contain"}} />
-                })
-            }
-            </Carousel>
-        </View>
-    );
+  return (
+    <KeyboardDismiss>
+      <ContentView>
+        <Carousel style={{ height: "40%" }} showCounter>
+          {
+            photosUri.map((photoUri: string) => {
+              return <Image source={{ uri: photoUri }} style={{ width: "100%", height: "100%", resizeMode: "contain" }} />
+            })
+          }
+        </Carousel>
+        <TextField
+          text60T
+          placeholder="Write a caption..."
+          fieldStyle={DefaultStyles.underLineTextField}
+          value={caption}
+          onChangeText={(value) => setCaption(value)}
+        />
+      </ContentView>
+    </KeyboardDismiss>
+  );
 };
 
 export default PostDescription;
