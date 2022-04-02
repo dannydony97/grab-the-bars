@@ -16,12 +16,16 @@ const PostDescription = ({ route, navigation }) => {
     setPhotosUri(route.params.selectedPhotosUri);
   }, []);
 
+  const onShare = () => {
+    console.log(photosUri);
+  };
+
   React.useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <Button
           title="Share"
-          onPress={() => navigation.navigate("To Doo!")}
+          onPress={onShare}
         />
       ),
     });
