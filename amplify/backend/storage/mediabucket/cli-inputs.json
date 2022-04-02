@@ -1,0 +1,18 @@
+{
+  "resourceName": "mediabucket",
+  "policyUUID": "4064d80c",
+  "bucketName": "grabthebars5a0d5085a7814073a20f9f7766e1b6e9",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

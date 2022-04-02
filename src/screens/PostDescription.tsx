@@ -1,23 +1,29 @@
 import React from "react";
-import { Button, KeyboardAvoidingView } from "react-native";
+import { Button } from "react-native";
 import { Carousel, Image, Incubator, View } from "react-native-ui-lib";
 import ContentView from "../components/ContentView";
 import KeyboardDismiss from "../components/KeyboardDismiss";
 import DefaultStyles from "../styles/DefaultStyles";
 
+import { Storage } from "aws-amplify";
+
 const { TextField } = Incubator;
 
 const PostDescription = ({ route, navigation }) => {
 
-  const [photosUri, setPhotosUri] = React.useState<Array<string>>([]);
+  const photosUri = route.params.selectedPhotosUri;
+
   const [caption, setCaption] = React.useState<string>("");
 
-  React.useEffect(() => {
-    setPhotosUri(route.params.selectedPhotosUri);
-  }, []);
+  const onShare = async () => {
 
-  const onShare = () => {
-    console.log(photosUri);
+    const image = await fetch(photosUri[0]);
+    const blob = await image.blob();
+
+    const result = await Storage.put(`image_` + Date.now(), blob, {
+      contentType: "image/jpeg"
+    });
+    console.log(result);
   };
 
   React.useEffect(() => {
