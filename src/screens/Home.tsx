@@ -5,28 +5,32 @@ import Profile from "./Profile";
 
 const Feed = () => <Text>This is feed</Text>;
 
-const Tab = createBottomTabNavigator();
-
-const Home = ({ navigation }) => {
-
+const Home = (props) => {
   return (
     <UserProvider>
-      <Tab.Navigator>
-        <Tab.Screen name="Feed" component={Feed}
-          options={{
-            title: "Feed"
-          }}
-        />
-        <Tab.Screen name="MyProfile" component={Profile}
-          options={({ navigation }) => ({
-            title: "My Profile",
-            headerRight: () => (
-              <Button title="Add" onPress={() => navigation.navigate("SelectPhoto")} />
-            )
-          })}
-        />
-      </Tab.Navigator>
+      <WrappedHome {...props} />
     </UserProvider>
+  );
+}
+
+const Tab = createBottomTabNavigator();
+const WrappedHome = ({ navigation }) => {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Feed" component={Feed}
+        options={{
+          title: "Feed"
+        }}
+      />
+      <Tab.Screen name="MyProfile" component={Profile}
+        options={({ navigation }) => ({
+          title: "My Profile",
+          headerRight: () => (
+            <Button title="Add" onPress={() => navigation.navigate("SelectPhoto")} />
+          )
+        })}
+      />
+    </Tab.Navigator>
   );
 };
 

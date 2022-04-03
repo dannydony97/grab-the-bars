@@ -5,25 +5,37 @@ import ContentView from "../components/ContentView";
 import KeyboardDismiss from "../components/KeyboardDismiss";
 import DefaultStyles from "../styles/DefaultStyles";
 
-import { Storage } from "aws-amplify";
-
 const { TextField } = Incubator;
 
-const PostDescription = ({ route, navigation }) => {
+import { PostProvider, usePost } from "../providers/PostProvider";
+import { UserProvider } from "../providers/UserProvider";
+
+const PostDescription = (props) => {
+  return (
+    <UserProvider>
+      <PostProvider>
+        <WrappedPostDescription {...props} />
+      </PostProvider>
+    </UserProvider>
+  );
+}
+
+const WrappedPostDescription = ({ route, navigation }) => {
 
   const photosUri = route.params.selectedPhotosUri;
+  const { share } = usePost();
 
   const [caption, setCaption] = React.useState<string>("");
 
   const onShare = async () => {
-
-    const image = await fetch(photosUri[0]);
-    const blob = await image.blob();
-
-    const result = await Storage.put(`image_` + Date.now(), blob, {
-      contentType: "image/jpeg"
-    });
-    console.log(result);
+    try {
+      await share({
+        mediaURIs: photosUri,
+        caption: caption
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   React.useEffect(() => {

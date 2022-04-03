@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Home from "../screens/Home";
 import SignIn from "../screens/SignIn";
 import SignUp from "../screens/SignUp";
-import NewPost from "../screens/SelectPhoto";
+import SelectPhoto from "../screens/SelectPhoto";
 import PostDescription from "../screens/PostDescription";
 
 const Stack = createStackNavigator();
@@ -22,7 +22,7 @@ const ScreensStack = () => {
         />
         <Stack.Screen 
           name="SelectPhoto" 
-          component={NewPost}
+          component={SelectPhoto}
         />
         <Stack.Screen 
           name="PostDescription"
