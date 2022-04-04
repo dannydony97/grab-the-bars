@@ -18,6 +18,8 @@ const PostProvider = ({children}) => {
 
   const share = async (postDetails: PostDetails) => {
 
+    console.log("Starting sharing!");
+    
     const db = await getDatabase();
     const collection = db.collection("posts");
     
@@ -43,6 +45,8 @@ const PostProvider = ({children}) => {
     });
     
     await pushPost(id.insertedId);
+
+    console.log("Succesfully posted!");
   }
 
   return (

@@ -8,43 +8,70 @@ interface UserDetails {
   profileImage?: string
 }
 
-/**
- * Current logged in user provider
- */
-const UserProvider = ({ children }) => {
+interface UserProviderProps {
+  children: JSX.Element | JSX.Element[],
+  userID?: Realm.BSON.ObjectId
+}
 
+const UserProvider = ({ children, userID }: UserProviderProps) => {
+
+  // Current logged in user informations
   const { user, username, getDatabase } = useAuth();
 
-  const [collection, setCollection] = React.useState(undefined);
+  const [currentUserID, setCurrentUserID] = React.useState(userID);
 
   React.useEffect(() => {
-    init();
-  }, []);
+    // If an ID hasn't been provided, use the logged in user as current user
+    if(userID === undefined) {
+      setCurrentUserID(user.id);
+    }
+  }, [userID]);
 
-  const init = async () => {
-    const db = await getDatabase();
-    const collection = await db.collection("users");
+  React.useEffect(() => {
 
-    if (collection === undefined)
-      throw new Error("User collection could not be retreaved!");
+    if(currentUserID === undefined)
+      return;
 
-    setCollection(collection);
+    // If current user wasn't registered before
+    const register = async () => {
 
-    const userDocument = await collection.findOne({ "userID": user.id });
-    if(userDocument === null) {
+      const collection = await getCollection();
+      if(collection === undefined)
+        return;
+
+      const userDocument = await collection.findOne({ "userID": currentUserID });
+      if(userDocument === null) {
+
+        // Need extra information from AuthentificationProvider
         // Init user collection with a new user details
         await collection.insertOne({
-          "userID": user.id,
+          "userID": currentUserID,
           "username": username,
           "description": "",
           "postsIDs": []
         });
+      }
     }
+
+    register();
+  }, [currentUserID]);
+
+  const getCollection = async () => {
+    const db = await getDatabase();
+    const collection = db.collection("users");
+    if (collection === undefined)
+      throw new Error("User collection could not be retreaved!");
+
+    return collection;
   }
 
   const getDetails = async (): Promise<UserDetails> => {
 
-    const userDocument = await collection.findOne({ "userID": user.id });
+    const collection = await getCollection();
+    if(collection === undefined)
+      throw new Error("Collection is undefined");
+
+    const userDocument = await collection.findOne({ "userID": currentUserID });
     if (userDocument === undefined)
       throw new Error("User could not be found!");
 
@@ -56,11 +83,15 @@ const UserProvider = ({ children }) => {
 
   const pushPost = async (id) => {
 
-    const userDocument = await collection.findOne({ "userID": user.id });
+    const collection = await getCollection();
+    if(collection === undefined)
+      throw new Error("Collection is undefined");
+
+    const userDocument = await collection.findOne({ "userID": currentUserID });
     if (userDocument === undefined)
       throw new Error("User could not be found!");
 
-    const res = await collection.updateOne({ "userID": user.id }, { $push: { postsIDs: id } });
+    const res = await collection.updateOne({ "userID": currentUserID }, { $push: { postsIDs: id } });
 
     console.log("Post ID succesfully pushed yo user!", res);
   }
