@@ -1,6 +1,7 @@
 import React from "react";
-import Realm, { BSON } from "realm";
+import Realm from "realm";
 import app from "../../realmApp";
+import { DATABASE_NAME, SERVICE_NAME } from "../app-exports";
 
 const AuthContext = React.createContext(null);
 
@@ -27,8 +28,8 @@ const AuthProvider = ({ children }) => {
   };
 
   const getDatabase = async () => {
-    const mongo = user.mongoClient("mongodb-atlas");
-    const db = mongo.db("grab_the_bars");
+    const mongo = user.mongoClient(SERVICE_NAME);
+    const db = mongo.db(DATABASE_NAME);
 
     return db;
   }

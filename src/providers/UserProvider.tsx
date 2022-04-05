@@ -45,10 +45,10 @@ const UserProvider = ({ children, userID }: UserProviderProps) => {
         // Need extra information from AuthentificationProvider
         // Init user collection with a new user details
         await collection.insertOne({
-          "userID": currentUserID,
-          "username": username,
-          "description": "",
-          "postsIDs": []
+          userID: currentUserID,
+          username: username,
+          description: "",
+          postsIDs: []
         });
       }
     }
