@@ -1,60 +1,56 @@
 import Realm from "realm";
-import Post from "./Post";
+import { getCollection, USERS_COLLECTION_NAME } from "../app-exports";
 
-interface UserDetails {
+interface UserDetails extends Realm.Services.MongoDB.Document<Realm.BSON.ObjectId> {
   userID: Realm.BSON.ObjectId;
   username: string;
-  description?: string;
-  posts?: Array<Realm.BSON.ObjectId>;
-  profileImageKey?: string | undefined;
-  coverImageKey?: string | undefined;
-  followers?: Array<Realm.BSON.ObjectId>;
-  following?: Array<Realm.BSON.ObjectId>;
-  joinedDate?: Date;
+  description: string;
+  postIDs: Array<Realm.BSON.ObjectId>;
+  profileImageKey: string | undefined;
+  coverImageKey: string | undefined;
+  followers: Array<Realm.BSON.ObjectId>;
+  following: Array<Realm.BSON.ObjectId>;
+  joinedDate: Date;
 }
 
 export default class User {
 
-  private _id: Realm.BSON.ObjectId;
-  private userDetails: UserDetails;
-
-  public constructor(userDetails: UserDetails) {
-    this.userDetails = userDetails;
-  }
-
-  public async write() {
-
-    try{
-      const realm = await Realm.open({
-        schema: [User.schema],
-      });
-
-      realm.write(() => {
-        const user = realm.create("User", {
-          
-        })
-      })
-
-      realm.close();
-    } catch(err) {
-      console.error("User writting failed!", err);
+  public static async add(userID: Realm.BSON.ObjectId, username: string): Promise<Realm.BSON.ObjectId> {
+    
+    if(await this.exists(userID)) {
+      throw new Error("User already exists!");
     }
+
+    const collection = await getCollection<UserDetails>(USERS_COLLECTION_NAME);
+    const id = await collection.insertOne({
+      userID: userID,
+      username: username,
+      description: "",
+      postIDs: [],
+      profileImageKey: undefined,
+      coverImageKey: undefined,
+      followers: [],
+      following: [],
+      joinedDate: new Date()
+    });
+
+    console.log(`User insertion done: ${id.insertedId}`);
+    return id.insertedId;
   }
 
-  public static schema: Realm.ObjectSchema = {
-    name: "User",
-    primaryKey: "_id",
-    properties: {
-      _id: "objectId",
-      userID: "objectId",
-      description: { type: "string", default: "" },
-      posts: { type: "Post[]", default: [] },
-      profileImageKey: { type: "string", default: "" },
-      coverImageKey: { type: "string", default: "" },
-      followers: { type: "objectId[]", default: [] },
-      following: { type: "objectId[]", default: [] },
-      joinedDate: { type: "date", default: Date.now() },
+  public static async get(userID: Realm.BSON.ObjectId): Promise<UserDetails> {
+
+    if(! await this.exists(userID)) {
+      throw new Error("User doesn't exist!");
     }
+
+    const collection = await getCollection<UserDetails>(USERS_COLLECTION_NAME);
+    return await collection.findOne({userID: userID});
   }
 
+  public static async exists(userID: Realm.BSON.ObjectId) : Promise<boolean> {
+    const collection = await getCollection<UserDetails>(USERS_COLLECTION_NAME);
+    const count = await collection.count({userID: userID});
+    return count !== 0;
+  }
 }

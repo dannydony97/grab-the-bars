@@ -3,6 +3,7 @@ import React from "react";
 import { Storage } from "aws-amplify";
 import { useAuth } from "./AuthProvider";
 import { useUser } from "./UserProvider";
+import Post from "../schemas/Post";
 
 const PostContext = React.createContext(null);
 
@@ -13,18 +14,11 @@ export interface PostDetails {
 
 const PostProvider = ({children}) => {
 
-  const { getDatabase } = useAuth();
   const { pushPost } = useUser();
 
   const share = async (postDetails: PostDetails) => {
 
     console.log("Starting sharing!");
-    
-    const db = await getDatabase();
-    const collection = db.collection("posts");
-    
-    if(collection === undefined)
-      throw new Error("Undefined collection!");
 
     const results = await Promise.all(postDetails.mediaURIs.map(async mediaUri => {
       const content = await fetch(mediaUri);
@@ -37,14 +31,9 @@ const PostProvider = ({children}) => {
 
     const keys = results.map(result => result.key);
 
-    const id = await collection.insertOne({
-      "caption": postDetails.caption,
-      "mediaKeys": keys,
-      "likes": [],
-      "date": new Date().toLocaleString(),
-    });
+    const id = await Post.add(postDetails.caption, keys);
     
-    await pushPost(id.insertedId);
+    await pushPost(id);
 
     console.log("Succesfully posted!");
   }

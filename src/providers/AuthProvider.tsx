@@ -1,7 +1,6 @@
 import React from "react";
 import Realm from "realm";
 import app from "../../realmApp";
-import { DATABASE_NAME, SERVICE_NAME } from "../app-exports";
 
 const AuthContext = React.createContext(null);
 
@@ -27,16 +26,9 @@ const AuthProvider = ({ children }) => {
     setUsername(username);
   };
 
-  const getDatabase = async () => {
-    const mongo = user.mongoClient(SERVICE_NAME);
-    const db = mongo.db(DATABASE_NAME);
-
-    return db;
-  }
-
   return (
     <AuthContext.Provider
-      value={{ registerUser, signIn, getDatabase, user, username }}
+      value={{ registerUser, signIn, user, username }}
     >
       {children}
     </AuthContext.Provider>
