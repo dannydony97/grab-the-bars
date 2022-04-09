@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Storage } from "aws-amplify";
-import { useAuth } from "./AuthProvider";
 import { useUser } from "./UserProvider";
 import Post from "../schemas/Post";
+import { uploadMedia } from "../app-exports";
 
 const PostContext = React.createContext(null);
 
@@ -20,17 +20,7 @@ const PostProvider = ({children}) => {
 
     console.log("Starting sharing!");
 
-    const results = await Promise.all(postDetails.mediaURIs.map(async mediaUri => {
-      const content = await fetch(mediaUri);
-      const blob = await content.blob();
-      const name = "image_" + Date.now();
-      return await Storage.put(name, blob, {
-        contentType: blob.type,
-      });
-    }));
-
-    const keys = results.map(result => result.key);
-
+    const keys = await uploadMedia(postDetails.mediaURIs);
     const id = await Post.add(postDetails.caption, keys);
     
     await pushPost(id);

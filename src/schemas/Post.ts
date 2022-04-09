@@ -1,7 +1,7 @@
 import Realm from "realm";
 import { getCollection, POSTS_COLLECTION_NAME } from "../app-exports";
 
-interface PostDetails  extends Realm.Services.MongoDB.Document<Realm.BSON.ObjectId> {
+export interface PostDetails  extends Realm.Services.MongoDB.Document<Realm.BSON.ObjectId> {
   caption: string;
   mediaKeys: Array<string>;
   userLikes: Array<Realm.BSON.ObjectId>;

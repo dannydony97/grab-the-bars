@@ -1,14 +1,9 @@
 import React from "react";
-import { getCollection, USERS_COLLECTION_NAME } from "../app-exports";
-import User from "../schemas/User";
+import { deleteMedia, downloadMedia, getCollection, uploadMedia, USERS_COLLECTION_NAME } from "../app-exports";
+import User, { UserDetails } from "../schemas/User";
 import { useAuth } from "./AuthProvider";
 
 const UserContext = React.createContext(null);
-
-interface UserDetails {
-  username: string,
-  profileImage?: string
-}
 
 interface UserProviderProps {
   children: JSX.Element | JSX.Element[],
@@ -21,6 +16,7 @@ const UserProvider = ({ children, userID }: UserProviderProps) => {
   const { user, username, getDatabase } = useAuth();
 
   const [currentUserID, setCurrentUserID] = React.useState<Realm.BSON.ObjectId | undefined>(userID);
+  const [userDetails, setUserDetails] = React.useState<UserDetails | undefined>();
 
   React.useEffect(() => {
     // If an ID hasn't been provided, use the logged in user as current user
@@ -36,46 +32,64 @@ const UserProvider = ({ children, userID }: UserProviderProps) => {
 
     const asyncEffect = async () => {
       if(! await User.exists(currentUserID)) {
-        await User.add(new Realm.BSON.ObjectId(currentUserID), username);
+        await User.add(currentUserID, username);
       }
+
+      setUserDetails(await User.get(currentUserID));
     };
     asyncEffect();
   }, [currentUserID]);
 
-  const getDetails = async (): Promise<UserDetails> => {
+  const pushPost = async (id: Realm.BSON.ObjectId) => {
 
     const collection = await getCollection(USERS_COLLECTION_NAME);
     if(collection === undefined)
       throw new Error("Collection is undefined");
 
-    const userDocument = await collection.findOne({ "userID": currentUserID });
+    const userDocument = await collection.findOne({ userID: currentUserID });
     if (userDocument === undefined)
       throw new Error("User could not be found!");
 
-    return {
-      username: userDocument.username,
-      profileImage: undefined // Must DO!
-    }
-  }
-
-  const pushPost = async (id) => {
-
-    const collection = await getCollection(USERS_COLLECTION_NAME);
-    if(collection === undefined)
-      throw new Error("Collection is undefined");
-
-    const userDocument = await collection.findOne({ "userID": currentUserID });
-    if (userDocument === undefined)
-      throw new Error("User could not be found!");
-
-    const res = await collection.updateOne({ "userID": currentUserID }, { $push: { postIDs: id } });
+    const res = await collection.updateOne({ userID: currentUserID }, { $push: { postIDs: id } });
 
     console.log("Post ID succesfully pushed to user!", res);
   }
 
+  const setCoverImage = async (imageURI: string): Promise<string> => {
+    const collection = await getCollection(USERS_COLLECTION_NAME);
+    if(collection === undefined) {
+      throw new Error("Collection is undefined");
+    }
+
+    const userDocument = await collection.findOne({ userID: currentUserID });
+    if (userDocument === undefined) {
+      throw new Error("User could not be found!");
+    }
+
+    const { coverImageKey } = userDetails;
+    if(coverImageKey !== null) {
+      deleteMedia([coverImageKey]);
+    }
+    
+    const [ key ] = await uploadMedia([imageURI]);
+    const res = await collection.updateOne({ userID: currentUserID }, { $set: { coverImageKey: key } });
+    setUserDetails(await User.get(currentUserID));
+
+    console.log("Cover image key succesfully setted to user!", res);
+    return key;
+  }
+
+  const getCoverImage = async (): Promise<string> => {
+
+    const { coverImageKey } = userDetails;
+    const [ coverImageURI ] = await downloadMedia([coverImageKey]);
+
+    return coverImageURI;
+  }
+
   return (
     <UserContext.Provider
-      value={{ getDetails, pushPost }}
+      value={{ pushPost, setCoverImage, getCoverImage, userDetails }}
     >
       {children}
     </UserContext.Provider>

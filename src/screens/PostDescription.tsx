@@ -49,6 +49,7 @@ const WrappedPostDescription = ({ route, navigation }) => {
     });
   }, []);
 
+  console.log(caption);
   return (
     <KeyboardDismiss>
       <ContentView>

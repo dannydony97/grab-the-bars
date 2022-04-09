@@ -1,13 +1,13 @@
 import Realm from "realm";
 import { getCollection, USERS_COLLECTION_NAME } from "../app-exports";
 
-interface UserDetails extends Realm.Services.MongoDB.Document<Realm.BSON.ObjectId> {
+export interface UserDetails extends Realm.Services.MongoDB.Document<Realm.BSON.ObjectId> {
   userID: Realm.BSON.ObjectId;
   username: string;
   description: string;
   postIDs: Array<Realm.BSON.ObjectId>;
-  profileImageKey: string | undefined;
-  coverImageKey: string | undefined;
+  profileImageKey: string | null;
+  coverImageKey: string | null;
   followers: Array<Realm.BSON.ObjectId>;
   following: Array<Realm.BSON.ObjectId>;
   joinedDate: Date;
@@ -27,8 +27,8 @@ export default class User {
       username: username,
       description: "",
       postIDs: [],
-      profileImageKey: undefined,
-      coverImageKey: undefined,
+      profileImageKey: null,
+      coverImageKey: null,
       followers: [],
       following: [],
       joinedDate: new Date()

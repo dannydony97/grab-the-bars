@@ -52,6 +52,10 @@
   <key>UIStatusBarStyle</key>
   <string>UIStatusBarStyleDefault</string>
   <key>NSPhotoLibraryUsageDescription</key>
-  <string>YOUR TEXT</string>
+  <string>NSPhotoLibraryUsageDescriptionString</string>
+	<key>NSCameraUsageDescription</key>
+	<string>NSCameraUsageDescriptionString</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>NSMicrophoneUsageDescriptionString</string>
 </dict>
 </plist>
