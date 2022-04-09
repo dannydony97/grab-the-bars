@@ -55,8 +55,8 @@ const WrappedPostDescription = ({ route, navigation }) => {
       <ContentView>
         <Carousel style={{ height: "40%" }} showCounter>
           {
-            photosUri.map((photoUri: string) => {
-              return <Image source={{ uri: photoUri }} style={{ width: "100%", height: "100%", resizeMode: "contain" }} />
+            photosUri.map((photoUri: string, index: number) => {
+              return <Image key={index} source={{ uri: photoUri }} style={{ width: "100%", height: "100%", resizeMode: "contain" }} />
             })
           }
         </Carousel>

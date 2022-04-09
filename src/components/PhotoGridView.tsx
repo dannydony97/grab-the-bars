@@ -22,7 +22,7 @@ const PhotoGridView = (props: PhotoGridViewProps) => {
   for(let i = 0; i < props.photosUri.length; i += props.rowPhotos) {
     const rowImages = [];
     for(let j = i; j < Math.min(i + props.rowPhotos, props.photosUri.length); j++) {
-      rowImages.push(<Photo photoUri={props.photosUri[j]} width={`${100/props.rowPhotos}%`} onPress={onPhotoPress} select />);
+      rowImages.push(<Photo key={j} photoUri={props.photosUri[j]} width={`${100/props.rowPhotos}%`} onPress={onPhotoPress} select />);
     }
     
     views.push(
