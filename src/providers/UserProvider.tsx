@@ -27,6 +27,8 @@ const UserProvider = ({ children, userID }: UserProviderProps) => {
 
   React.useEffect(() => {
 
+    console.log(currentUserID);
+
     if(currentUserID === undefined)
       return;
 
@@ -43,14 +45,21 @@ const UserProvider = ({ children, userID }: UserProviderProps) => {
   const pushPost = async (id: Realm.BSON.ObjectId) => {
 
     const collection = await getCollection(USERS_COLLECTION_NAME);
-    if(collection === undefined)
+    if(collection === undefined) {
       throw new Error("Collection is undefined");
+    }
 
     const userDocument = await collection.findOne({ userID: currentUserID });
-    if (userDocument === undefined)
+    if (userDocument === null) {
       throw new Error("User could not be found!");
+    }
 
+    console.log("The id: ", userDocument);
     const res = await collection.updateOne({ userID: currentUserID }, { $push: { postIDs: id } });
+
+    if(res.matchedCount !== 1 || res.modifiedCount !== 1) {
+      throw new Error("User collection could not be updated!");
+    }
 
     console.log("Post ID succesfully pushed to user!", res);
   }
@@ -62,7 +71,7 @@ const UserProvider = ({ children, userID }: UserProviderProps) => {
     }
 
     const userDocument = await collection.findOne({ userID: currentUserID });
-    if (userDocument === undefined) {
+    if (userDocument === null) {
       throw new Error("User could not be found!");
     }
 
@@ -74,7 +83,6 @@ const UserProvider = ({ children, userID }: UserProviderProps) => {
     const [ key ] = await uploadMedia([imageURI]);
     const res = await collection.updateOne({ userID: currentUserID }, { $set: { coverImageKey: key } });
 
-    console.log("Im'm hereeee", res.matchedCount);
     if(res.matchedCount !== 1 || res.modifiedCount !== 1) {
       throw new Error("User collection could not be updated!");
     }

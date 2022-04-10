@@ -5,8 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Home from "../screens/Home";
 import SignIn from "../screens/SignIn";
 import SignUp from "../screens/SignUp";
-import SelectPhoto from "../screens/SelectPhoto";
-import PostDescription from "../screens/PostDescription";
+import AddPostStack from "./AddPostStack";
 
 const Stack = createStackNavigator();
 
@@ -16,22 +15,17 @@ const ScreensStack = () => {
       <Stack.Navigator
         initialRouteName="SignIn"
       >
-        <Stack.Screen name="Home" 
+        <Stack.Screen
+          name="Home" 
           component={Home} 
           options={{ headerShown: false }} 
         />
         <Stack.Screen 
-          name="SelectPhoto" 
-          component={SelectPhoto}
+          name="AddPostStack" 
+          component={AddPostStack}
           options={{
+            headerShown: false,
             presentation: "modal"
-          }}
-        />
-        <Stack.Screen 
-          name="PostDescription"
-          component={PostDescription}
-          options={{
-            presentation: "modal",
           }}
         />
         <Stack.Screen 

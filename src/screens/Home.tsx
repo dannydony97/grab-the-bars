@@ -29,7 +29,7 @@ const WrappedHome = ({ navigation }) => {
         options={({ navigation }) => ({
           title: "My Profile",
           headerRight: () => (
-            <Button title="Add" onPress={() => navigation.navigate("SelectPhoto")} />
+            <Button title="Add" onPress={() => navigation.navigate("AddPostStack")} />
           )
         })}
       />
