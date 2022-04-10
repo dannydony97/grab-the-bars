@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Button, Text } from "react-native";
+import { PostProvider } from "../providers/PostProvider";
 import { UserProvider } from "../providers/UserProvider";
 import Profile from "./Profile";
 
@@ -8,7 +9,9 @@ const Feed = () => <Text>This is feed</Text>;
 const Home = (props) => {
   return (
     <UserProvider>
-      <WrappedHome {...props} />
+      <PostProvider>
+        <WrappedHome {...props} />
+      </PostProvider>
     </UserProvider>
   );
 }

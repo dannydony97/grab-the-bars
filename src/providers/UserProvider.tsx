@@ -73,6 +73,12 @@ const UserProvider = ({ children, userID }: UserProviderProps) => {
     
     const [ key ] = await uploadMedia([imageURI]);
     const res = await collection.updateOne({ userID: currentUserID }, { $set: { coverImageKey: key } });
+
+    console.log("Im'm hereeee", res.matchedCount);
+    if(res.matchedCount !== 1 || res.modifiedCount !== 1) {
+      throw new Error("User collection could not be updated!");
+    }
+
     setUserDetails(await User.get(currentUserID));
 
     console.log("Cover image key succesfully setted to user!", res);

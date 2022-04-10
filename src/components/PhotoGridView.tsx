@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Image, TouchableOpacity, View } from "react-native-ui-lib";
 
@@ -7,7 +7,8 @@ import Photo from "./Photo";
 interface PhotoGridViewProps {
   rowPhotos: number,
   photosUri: Array<string>,
-  multiSeletect?: boolean,
+  multiSelect?: boolean,
+  style?: StyleProp<ViewStyle>;
   onPhotoPress?: (uri: string) => void
 }
 
@@ -26,14 +27,14 @@ const PhotoGridView = (props: PhotoGridViewProps) => {
     }
     
     views.push(
-      <View style={{ flex: 1, flexDirection: "row" }}>
+      <View key={i} style={{ flex: 1, flexDirection: "row" }}>
         {rowImages}
       </View>
     );
   }
 
   return (
-    <ScrollView>
+    <ScrollView style={props.style}>
       {views}
     </ScrollView>
   );

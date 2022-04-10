@@ -1,8 +1,12 @@
 import React from "react";
 import { Avatar, Text, View } from "react-native-ui-lib";
+import { downloadMedia } from "../app-exports";
 import ContentView from "../components/ContentView";
 import CoverImage from "../components/CoverImage";
+import PhotoGridView from "../components/PhotoGridView";
+import { usePost } from "../providers/PostProvider";
 import { useUser } from "../providers/UserProvider";
+import { PostDetails } from "../schemas/Post";
 
 const noProfilePicture = require("../assets/no-profile-picture.png");
 
@@ -11,9 +15,9 @@ interface ProfileInfoProps {
   text: string
 }
 
-const ProfileInfo = ({count, text}: ProfileInfoProps) => {
+const ProfileInfo = ({ count, text }: ProfileInfoProps) => {
   return (
-    <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text text60>{count}</Text>
       <Text>{text}</Text>
     </View>
@@ -23,30 +27,56 @@ const ProfileInfo = ({count, text}: ProfileInfoProps) => {
 const Profile = () => {
 
   const { userDetails } = useUser();
+  const { getDetails } = usePost();
 
   const [profilePicture, setProfilePicture] = React.useState(noProfilePicture);
 
-  const [ coverImageHeight ] = React.useState<number>(150);
-  const [ profileImageSize ] = React.useState<number>(90);
-  const [ followingCount ] = React.useState<number>(userDetails.following.length);
-  const [ followersCount ] = React.useState<number>(userDetails.followers.length);
-  const [ postsCount ] = React.useState<number>(userDetails.postIDs.length);
+  const [coverImageHeight] = React.useState<number>(150);
+  const [profileImageSize] = React.useState<number>(90);
+  const [followingCount] = React.useState<number>(userDetails.following.length);
+  const [followersCount] = React.useState<number>(userDetails.followers.length);
+  const [postsCount] = React.useState<number>(userDetails.postIDs.length);
+
+  const [postsDetails, setPostsDetails] = React.useState<Array<PostDetails>>([]);
+  const [mediaURIs, setMediaURIs] = React.useState<Array<string>>([]);
 
   React.useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setPostsDetails(await getDetails());
+      } catch(err) {
+        console.error(err);
+      }
+    }
+
+    fetchPosts();
   }, []);
-  
+
+  React.useEffect(() => {
+    const fetchMedia = async () => {
+      const URIs = await Promise.all(postsDetails.map(async postDetails => {
+        const [ URI ] = await downloadMedia([postDetails.mediaKeys[0]]);
+        return URI;
+      }));
+      setMediaURIs(URIs);
+    }
+
+    fetchMedia();
+  }, [postsDetails]);
+
   return (
     <ContentView>
       <CoverImage height={coverImageHeight} />
-      <Avatar source={profilePicture} size={profileImageSize} containerStyle={{position: "absolute", left: 15, top: coverImageHeight - profileImageSize/2}} />
-      <Text text65 style={{left: 120, top: 10}}>{userDetails.username}</Text>
-      <View style={{height: 60}}>
-      <View style={{marginLeft:0, flex: 1, flexDirection: "row", top: 25}}>
-        <ProfileInfo count={postsCount} text={"Posts"} />
-        <ProfileInfo count={followersCount} text={"Followers"} />
-        <ProfileInfo count={followingCount} text={"Following"} />
+      <Avatar source={profilePicture} size={profileImageSize} containerStyle={{ position: "absolute", left: 15, top: coverImageHeight - profileImageSize / 2 }} />
+      <Text text65 style={{ left: 120, top: 10 }}>{userDetails.username}</Text>
+      <View style={{ height: 60 }}>
+        <View style={{ marginLeft: 0, flex: 1, flexDirection: "row", top: 25 }}>
+          <ProfileInfo count={postsCount} text={"Posts"} />
+          <ProfileInfo count={followersCount} text={"Followers"} />
+          <ProfileInfo count={followingCount} text={"Following"} />
+        </View>
       </View>
-      </View>
+      <PhotoGridView rowPhotos={3} photosUri={mediaURIs} style={{top: 30}} />
     </ContentView>
   );
 };

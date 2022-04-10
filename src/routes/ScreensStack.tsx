@@ -23,12 +23,15 @@ const ScreensStack = () => {
         <Stack.Screen 
           name="SelectPhoto" 
           component={SelectPhoto}
+          options={{
+            presentation: "modal"
+          }}
         />
         <Stack.Screen 
           name="PostDescription"
           component={PostDescription}
           options={{
-            animationEnabled: false
+            presentation: "modal",
           }}
         />
         <Stack.Screen 

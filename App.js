@@ -20,10 +20,8 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <SafeAreaView style={{ flex: 1 }}>
         <ScreensStack />
         <StatusBar style="auto" />
-      </SafeAreaView>
     </AuthProvider>
   );
 }

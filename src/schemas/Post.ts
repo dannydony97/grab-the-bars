@@ -25,22 +25,17 @@ export default class Post {
   }
 
   public static async get(_id: Realm.BSON.ObjectId): Promise<PostDetails> {
-    if(!this.exists(_id)) {
-      throw new Error("Post doesn't exists!");
+    if(! await this.exists(_id)) {
+      throw new Error(`Post doesn't exists. ID: ${_id}`);
     }
 
     const collection = await getCollection<PostDetails>(POSTS_COLLECTION_NAME);
     return await collection.findOne({_id: _id});
   }
 
-  public static exists(_id: Realm.BSON.ObjectId) {
-    let exists = false;
-    getCollection<PostDetails>(POSTS_COLLECTION_NAME)
-    .then(collection =>  collection.count({_id: _id}))
-    .then(count => {
-      exists = count !== 0;
-    });
-
-    return exists;
+  public static async exists(_id: Realm.BSON.ObjectId): Promise<boolean> {
+    const collection = await getCollection<PostDetails>(POSTS_COLLECTION_NAME)
+    const count = await collection.count({_id: _id});
+    return count !== 0;
   }
 }

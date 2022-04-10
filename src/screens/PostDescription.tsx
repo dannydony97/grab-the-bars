@@ -29,10 +29,7 @@ const WrappedPostDescription = ({ route, navigation }) => {
 
   const onShare = async () => {
     try {
-      await share({
-        mediaURIs: photosUri,
-        caption: caption
-      });
+      await share(photosUri, caption);
     } catch (err) {
       console.error(err);
     }

@@ -2,35 +2,41 @@ import React from "react";
 
 import { Storage } from "aws-amplify";
 import { useUser } from "./UserProvider";
-import Post from "../schemas/Post";
-import { uploadMedia } from "../app-exports";
+import Post, { PostDetails } from "../schemas/Post";
+import { downloadMedia, uploadMedia } from "../app-exports";
 
 const PostContext = React.createContext(null);
 
-export interface PostDetails {
-  mediaURIs: Array<string>,
-  caption: string
-}
-
 const PostProvider = ({children}) => {
 
-  const { pushPost } = useUser();
+  const { pushPost, userDetails } = useUser();
 
-  const share = async (postDetails: PostDetails) => {
+  const share = async (mediaURIs: Array<string>, caption: string) => {
 
     console.log("Starting sharing!");
 
-    const keys = await uploadMedia(postDetails.mediaURIs);
-    const id = await Post.add(postDetails.caption, keys);
+    const keys = await uploadMedia(mediaURIs);
+    const id = await Post.add(caption, keys);
     
     await pushPost(id);
 
     console.log("Succesfully posted!");
   }
 
+  const getDetails = async (_ids?: Array<Realm.BSON.ObjectId>): Promise<Array<PostDetails>> => {
+
+    const { postIDs } = _ids !== undefined ? _ids : userDetails;
+    const postsDetails: Array<PostDetails> = await Promise.all(postIDs.map(async postID => {
+      const postDetails = await Post.get(postID);
+      return postDetails;
+    }));
+
+    return postsDetails;
+  }
+
   return (
     <PostContext.Provider
-      value={{ share }}
+      value={{ share, getDetails }}
     >
       {children}
     </PostContext.Provider>
