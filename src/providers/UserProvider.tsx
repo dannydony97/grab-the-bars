@@ -7,7 +7,7 @@ const UserContext = React.createContext(null);
 
 interface UserProviderProps {
   children: JSX.Element | JSX.Element[],
-  userID?: Realm.BSON.ObjectId
+  userID?: string
 }
 
 const UserProvider = ({ children, userID }: UserProviderProps) => {
@@ -15,13 +15,13 @@ const UserProvider = ({ children, userID }: UserProviderProps) => {
   // Current logged in user informations
   const { user, username, getDatabase } = useAuth();
 
-  const [currentUserID, setCurrentUserID] = React.useState<Realm.BSON.ObjectId | undefined>(userID);
+  const [currentUserID, setCurrentUserID] = React.useState<string | undefined>(userID);
   const [userDetails, setUserDetails] = React.useState<UserDetails | undefined>();
 
   React.useEffect(() => {
     // If an ID hasn't been provided, use the logged in user as current user
     if(userID === undefined) {
-      setCurrentUserID(new Realm.BSON.ObjectId(user.id));
+      setCurrentUserID(user.id);
     }
   }, [userID]);
 

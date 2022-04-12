@@ -7,20 +7,9 @@ import DefaultStyles from "../styles/DefaultStyles";
 
 const { TextField } = Incubator;
 
-import { PostProvider, usePost } from "../providers/PostProvider";
-import { UserProvider } from "../providers/UserProvider";
+import { usePost } from "../providers/PostProvider";
 
-const PostDescription = (props) => {
-  return (
-    <UserProvider>
-      <PostProvider>
-        <WrappedPostDescription {...props} />
-      </PostProvider>
-    </UserProvider>
-  );
-}
-
-const WrappedPostDescription = ({ route, navigation }) => {
+const PostDescription = ({ route, navigation }) => {
 
   const photosUri = route.params.selectedPhotosUri;
   const { share } = usePost();

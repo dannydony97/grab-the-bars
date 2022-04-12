@@ -1,23 +1,11 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Button, Text } from "react-native";
-import { PostProvider } from "../providers/PostProvider";
-import { UserProvider } from "../providers/UserProvider";
-import Profile from "./Profile";
+import Profile from "../screens/Profile";
 
 const Feed = () => <Text>This is feed</Text>;
 
-const Home = (props) => {
-  return (
-    <UserProvider>
-      <PostProvider>
-        <WrappedHome {...props} />
-      </PostProvider>
-    </UserProvider>
-  );
-}
-
 const Tab = createBottomTabNavigator();
-const WrappedHome = ({ navigation }) => {
+const HomeStack = ({ navigation }) => {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Feed" component={Feed}
@@ -37,4 +25,4 @@ const WrappedHome = ({ navigation }) => {
   );
 };
 
-export default Home;
+export default HomeStack;

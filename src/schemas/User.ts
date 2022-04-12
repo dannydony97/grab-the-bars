@@ -2,7 +2,7 @@ import Realm from "realm";
 import { getCollection, USERS_COLLECTION_NAME } from "../app-exports";
 
 export interface UserDetails extends Realm.Services.MongoDB.Document<Realm.BSON.ObjectId> {
-  userID: Realm.BSON.ObjectId;
+  userID: string;
   username: string;
   description: string;
   postIDs: Array<Realm.BSON.ObjectId>;
@@ -15,7 +15,7 @@ export interface UserDetails extends Realm.Services.MongoDB.Document<Realm.BSON.
 
 export default class User {
 
-  public static async add(userID: Realm.BSON.ObjectId, username: string): Promise<Realm.BSON.ObjectId> {
+  public static async add(userID: string, username: string): Promise<Realm.BSON.ObjectId> {
     
     if(await this.exists(userID)) {
       throw new Error("User already exists!");
@@ -38,7 +38,7 @@ export default class User {
     return id.insertedId;
   }
 
-  public static async get(userID: Realm.BSON.ObjectId): Promise<UserDetails> {
+  public static async get(userID: string): Promise<UserDetails> {
 
     if(! await this.exists(userID)) {
       throw new Error("User doesn't exist!");
@@ -48,7 +48,7 @@ export default class User {
     return await collection.findOne({userID: userID});
   }
 
-  public static async exists(userID: Realm.BSON.ObjectId) : Promise<boolean> {
+  public static async exists(userID: string) : Promise<boolean> {
     const collection = await getCollection<UserDetails>(USERS_COLLECTION_NAME);
     const count = await collection.count({userID: userID});
     return count !== 0;
