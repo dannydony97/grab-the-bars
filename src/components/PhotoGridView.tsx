@@ -1,6 +1,7 @@
-import { StyleProp, StyleSheet, ViewStyle } from "react-native";
+import React from "react";
+import { RefreshControl, StyleProp, ViewStyle } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { Image, TouchableOpacity, View } from "react-native-ui-lib";
+import { View } from "react-native-ui-lib";
 
 import Photo from "./Photo";
 
@@ -10,9 +11,12 @@ interface PhotoGridViewProps {
   multiSelect?: boolean,
   style?: StyleProp<ViewStyle>;
   onPhotoPress?: (uri: string) => void
+  onRefresh?: () => void;
 }
 
 const PhotoGridView = (props: PhotoGridViewProps) => {
+
+  const [refreshing, setRefreshing] = React.useState<boolean>(false);
 
   const onPhotoPress = (photoUri: string) => {
     if(props.onPhotoPress !== undefined)
@@ -34,7 +38,15 @@ const PhotoGridView = (props: PhotoGridViewProps) => {
   }
 
   return (
-    <ScrollView style={props.style}>
+    <ScrollView 
+      style={props.style}
+      refreshControl={
+        props.onRefresh && <RefreshControl
+          refreshing={refreshing}
+          onRefresh={props.onRefresh}
+        />
+      }
+    >
       {views}
     </ScrollView>
   );

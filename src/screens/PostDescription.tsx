@@ -19,6 +19,8 @@ const PostDescription = ({ route, navigation }) => {
   const onShare = async () => {
     try {
       await share(photosUri, caption);
+      navigation.popToTop();
+      navigation.goBack();
     } catch (err) {
       console.error(err);
     }

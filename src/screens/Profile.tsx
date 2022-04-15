@@ -41,14 +41,6 @@ const Profile = () => {
   const [mediaURIs, setMediaURIs] = React.useState<Array<string>>([]);
 
   React.useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setPostsDetails(await getDetails());
-      } catch(err) {
-        console.error(err);
-      }
-    }
-
     fetchPosts();
   }, []);
 
@@ -64,8 +56,20 @@ const Profile = () => {
     fetchMedia();
   }, [postsDetails]);
 
+  const fetchPosts = async () => {
+    try {
+      setPostsDetails(await getDetails());
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  const onRefresh = () => {
+    fetchPosts();
+  }
+
   return (
-    <ContentView>
+    <>
       <CoverImage height={coverImageHeight} />
       <Avatar source={profilePicture} size={profileImageSize} containerStyle={{ position: "absolute", left: 15, top: coverImageHeight - profileImageSize / 2 }} />
       <Text text65 style={{ left: 120, top: 10 }}>{userDetails.username}</Text>
@@ -76,8 +80,8 @@ const Profile = () => {
           <ProfileInfo count={followingCount} text={"Following"} />
         </View>
       </View>
-      <PhotoGridView rowPhotos={3} photosUri={mediaURIs} style={{top: 30}} />
-    </ContentView>
+      <PhotoGridView rowPhotos={3} photosUri={mediaURIs} style={{top: 30}} onRefresh={onRefresh} />
+    </>
   );
 };
 
