@@ -58,7 +58,7 @@ const SelectPhoto = ({ navigation }) => {
             uri: selectedPhotosUri.length ? selectedPhotosUri[selectedPhotosUri.length - 1] : null }} 
           style={styles.photo} />
       </View>
-      <PhotoGridView rowPhotos={4} photosUri={photosUri} onPhotoPress={onPhotoPress} />
+      <PhotoGridView rowPhotos={4} photosUri={photosUri} onPhotoPress={onPhotoPress} select scrollEnabled />
     </View>
   );
 };

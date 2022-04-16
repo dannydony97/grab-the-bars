@@ -348,6 +348,8 @@ PODS:
   - RNScreens (3.13.1):
     - React-Core
     - React-RCTImage
+  - RNVectorIcons (9.1.0):
+    - React-Core
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -402,6 +404,7 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -508,6 +511,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -563,6 +568,7 @@ SPEC CHECKSUMS:
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
   RNReanimated: 0e5ef4a7e4e79f84efbe5b40771c31044c51e7d0
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
+  RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
   Yoga: e6ecf3fa25af9d4c87e94ad7d5d292eedef49749
 
 PODFILE CHECKSUM: 84027cac84aa3bcf0e8ad813fdd904d47b2b92ce

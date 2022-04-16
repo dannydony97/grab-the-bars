@@ -1,7 +1,8 @@
+import { StatusBar } from "expo-status-bar";
 import React from "react";
+import { ScrollView } from "react-native-gesture-handler";
 import { Avatar, Text, View } from "react-native-ui-lib";
 import { downloadMedia } from "../app-exports";
-import ContentView from "../components/ContentView";
 import CoverImage from "../components/CoverImage";
 import PhotoGridView from "../components/PhotoGridView";
 import { usePost } from "../providers/PostProvider";
@@ -31,8 +32,9 @@ const Profile = () => {
 
   const [profilePicture, setProfilePicture] = React.useState(noProfilePicture);
 
-  const [coverImageHeight] = React.useState<number>(150);
+  const [coverImageHeight] = React.useState<number>(200);
   const [profileImageSize] = React.useState<number>(90);
+  const [radius] = React.useState<number>(30);
   const [followingCount] = React.useState<number>(userDetails.following.length);
   const [followersCount] = React.useState<number>(userDetails.followers.length);
   const [postsCount] = React.useState<number>(userDetails.postIDs.length);
@@ -47,7 +49,7 @@ const Profile = () => {
   React.useEffect(() => {
     const fetchMedia = async () => {
       const URIs = await Promise.all(postsDetails.map(async postDetails => {
-        const [ URI ] = await downloadMedia([postDetails.mediaKeys[0]]);
+        const [URI] = await downloadMedia([postDetails.mediaKeys[0]]);
         return URI;
       }));
       setMediaURIs(URIs);
@@ -59,7 +61,7 @@ const Profile = () => {
   const fetchPosts = async () => {
     try {
       setPostsDetails(await getDetails());
-    } catch(err) {
+    } catch (err) {
       console.error(err);
     }
   }
@@ -69,19 +71,22 @@ const Profile = () => {
   }
 
   return (
-    <>
+    <ScrollView style={{flex: 1}}>
+      <StatusBar style="light" />
       <CoverImage height={coverImageHeight} />
-      <Avatar source={profilePicture} size={profileImageSize} containerStyle={{ position: "absolute", left: 15, top: coverImageHeight - profileImageSize / 2 }} />
-      <Text text65 style={{ left: 120, top: 10 }}>{userDetails.username}</Text>
-      <View style={{ height: 60 }}>
-        <View style={{ marginLeft: 0, flex: 1, flexDirection: "row", top: 25 }}>
-          <ProfileInfo count={postsCount} text={"Posts"} />
-          <ProfileInfo count={followersCount} text={"Followers"} />
-          <ProfileInfo count={followingCount} text={"Following"} />
+      <View style={{flex: 1, borderTopLeftRadius: radius, borderTopRightRadius: radius, backgroundColor: "white", bottom: radius}}>
+        <Text text65 style={{ left: 130, top: 10 }}>{userDetails.username}</Text>
+        <View style={{ height: 60 }}>
+          <View style={{ marginLeft: 0, flex: 1, flexDirection: "row", top: 25 }}>
+            <ProfileInfo count={postsCount} text={"Posts"} />
+            <ProfileInfo count={followersCount} text={"Followers"} />
+            <ProfileInfo count={followingCount} text={"Following"} />
+          </View>
         </View>
+        <PhotoGridView rowPhotos={3} photosUri={mediaURIs} style={{top: 30}} />
       </View>
-      <PhotoGridView rowPhotos={3} photosUri={mediaURIs} style={{top: 30}} onRefresh={onRefresh} />
-    </>
+      <Avatar source={profilePicture} size={profileImageSize} containerStyle={{ position: "absolute", left: radius, top: coverImageHeight - profileImageSize / 2 - radius }} />
+    </ScrollView>
   );
 };
 

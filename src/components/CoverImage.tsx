@@ -1,12 +1,12 @@
 import React from "react";
-import { Alert, StyleSheet } from "react-native";
+import { Alert, StyleProp, StyleSheet, ViewStyle } from "react-native";
 import { ImagePickerResponse, launchCamera, launchImageLibrary } from "react-native-image-picker";
 import { ActionSheet, Colors, Image, LoaderScreen, Text, TouchableOpacity, View } from "react-native-ui-lib";
 
 import { useUser } from "../providers/UserProvider";
 
 interface CoverImageProps {
-  height: number
+  height: number,
 }
 
 const CoverImage = ({ height }: CoverImageProps) => {
@@ -82,7 +82,7 @@ const CoverImage = ({ height }: CoverImageProps) => {
         onPress={() => setVisibleActionSheet(true)}
       >
         {coverImageURI === null && <Text text70T white>Add cover image...</Text>}
-        {coverImageURI !== null && <Image source={{ uri: coverImageURI }} style={{ width: "100%", height: "100%" }} />}
+        {coverImageURI !== null && <Image source={{ uri: coverImageURI }} style={{ width: "100%", height: "100%"}} />}
         {loading && <LoaderScreen color={Colors.grey80} style={{position: "absolute", bottom: height/2 - 20}} /> }
       </TouchableOpacity>
       <ActionSheet
