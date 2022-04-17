@@ -25,7 +25,7 @@ const ProfileInfo = ({ count, text }: ProfileInfoProps) => {
   );
 }
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
 
   const { userDetails } = useUser();
   const { getDetails } = usePost();
@@ -70,6 +70,10 @@ const Profile = () => {
     fetchPosts();
   }
 
+  const onPhotoPress = () => {
+    navigation.navigate("ProfileCards");
+  }
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <StatusBar style="light" />
@@ -81,7 +85,7 @@ const Profile = () => {
           <ProfileInfo count={followersCount} text={"Followers"} />
           <ProfileInfo count={followingCount} text={"Following"} />
         </View>
-        <PhotoGridView rowPhotos={3} photosURI={mediaURIs} />
+        <PhotoGridView rowPhotos={3} photosURI={mediaURIs} onPress={onPhotoPress} />
       </View>
       <Avatar source={profilePicture} size={profileImageSize} containerStyle={{ position: "absolute", left: radius, top: coverImageHeight - profileImageSize / 2 - radius }} />
     </ScrollView>

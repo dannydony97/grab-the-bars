@@ -25,22 +25,22 @@ interface PhotoGridViewProps {
   photosURI: Array<string>,
   multiSelect?: boolean
   select?: boolean;
-  onPhotoPress?: (uri: string) => void;
+  onPress?: (uri: string) => void;
   style?: StyleProp<ViewStyle>;
 }
 
 const PhotoGridView = (props: PhotoGridViewProps) => {
 
-  const onPhotoPress = (photoUri: string) => {
-    if (props.onPhotoPress !== undefined)
-      props.onPhotoPress(photoUri);
+  const onPress = (photoUri: string) => {
+    if (props.onPress !== undefined)
+      props.onPress(photoUri);
   };
 
   return (
     <GridView
       style={props.style}
       infos={props.photosURI}
-      renderItem={(info, index) => (<Photo key={index} URI={info} width={"100%"} onPress={onPhotoPress} select />)}
+      renderItem={(info, index) => (<Photo key={index} URI={info} width={"100%"} onPress={onPress} select={props.select} />)}
       numColumns={props.rowPhotos}
     />
   );
