@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { TouchableOpacity, Image, Colors } from "react-native-ui-lib";
 
 interface PhotoProps {
-  photoUri: string,
+  URI: string,
   width: string,
   onPress: (photoUri?: string) => void,
   select?: boolean
@@ -15,7 +15,7 @@ const Photo = (props: PhotoProps) => {
   const [selected, setSelected] = React.useState(false);
 
   const onPhotoPress = () => {
-    props.onPress(props.photoUri);
+    props.onPress(props.URI);
 
     if(props.select !== undefined && props.select === true) {
 
@@ -43,7 +43,7 @@ const Photo = (props: PhotoProps) => {
       onPress={onPhotoPress}
     >
       <Image
-        source={{ uri: props.photoUri }}
+        source={{ uri: props.URI }}
         style={{ width: "99%", height: "99%", ...photoStyle }}
       />
     </TouchableOpacity>);

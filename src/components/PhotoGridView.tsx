@@ -4,36 +4,44 @@ import { View } from "react-native-ui-lib";
 
 import Photo from "./Photo";
 
+interface GridViewProps {
+  infos: Array<any>,
+  renderItem: (info: any, index?: number) => React.ReactElement;
+  numColumns: number;
+  style?: StyleProp<ViewStyle>;
+}
+
+const GridView = ({ infos, renderItem, numColumns, style}: GridViewProps) => {
+  const size = `${100/numColumns}%`;
+  return (
+    <View style={[ style, { flexDirection: "row", flexWrap: "wrap" }]}>
+      {infos.map((info, index) => (<View key={index} style={{width: size, aspectRatio: 1 }}>{renderItem(info, index)}</View>))}
+    </View>
+  );
+}
+
 interface PhotoGridViewProps {
   rowPhotos: number,
-  photosUri: Array<string>,
-  multiSelect?: boolean,
-  scrollEnabled?: boolean;
-  style?: StyleProp<ViewStyle>;
+  photosURI: Array<string>,
+  multiSelect?: boolean
   select?: boolean;
   onPhotoPress?: (uri: string) => void;
+  style?: StyleProp<ViewStyle>;
 }
 
 const PhotoGridView = (props: PhotoGridViewProps) => {
 
-  const [ width ] = React.useState<string>(`${100/props.rowPhotos}%`);
-
   const onPhotoPress = (photoUri: string) => {
-    if(props.onPhotoPress !== undefined)
+    if (props.onPhotoPress !== undefined)
       props.onPhotoPress(photoUri);
   };
 
   return (
-    <FlatList
+    <GridView
       style={props.style}
-      data={props.photosUri}
-      renderItem={(dataInfo) => (
-        <Photo photoUri={dataInfo.item} width={width} onPress={onPhotoPress} select={props.select} />
-      )}
+      infos={props.photosURI}
+      renderItem={(info, index) => (<Photo key={index} URI={info} width={"100%"} onPress={onPhotoPress} select />)}
       numColumns={props.rowPhotos}
-      keyExtractor={(item, index) => index.toString()}
-      scrollEnabled={props.scrollEnabled}
-      nestedScrollEnabled
     />
   );
 };

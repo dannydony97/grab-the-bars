@@ -34,7 +34,7 @@ const Profile = () => {
 
   const [coverImageHeight] = React.useState<number>(200);
   const [profileImageSize] = React.useState<number>(90);
-  const [radius] = React.useState<number>(30);
+  const [radius] = React.useState<number>(25);
   const [followingCount] = React.useState<number>(userDetails.following.length);
   const [followersCount] = React.useState<number>(userDetails.followers.length);
   const [postsCount] = React.useState<number>(userDetails.postIDs.length);
@@ -71,19 +71,17 @@ const Profile = () => {
   }
 
   return (
-    <ScrollView style={{flex: 1}}>
+    <ScrollView style={{ flex: 1 }}>
       <StatusBar style="light" />
       <CoverImage height={coverImageHeight} />
-      <View style={{flex: 1, borderTopLeftRadius: radius, borderTopRightRadius: radius, backgroundColor: "white", bottom: radius}}>
+      <View style={{ flex: 1, borderTopLeftRadius: radius, borderTopRightRadius: radius, backgroundColor: "white", bottom: radius }}>
         <Text text65 style={{ left: 130, top: 10 }}>{userDetails.username}</Text>
-        <View style={{ height: 60 }}>
-          <View style={{ marginLeft: 0, flex: 1, flexDirection: "row", top: 25 }}>
-            <ProfileInfo count={postsCount} text={"Posts"} />
-            <ProfileInfo count={followersCount} text={"Followers"} />
-            <ProfileInfo count={followingCount} text={"Following"} />
-          </View>
+        <View style={{ marginLeft: 0, flexDirection: "row", paddingTop: 20, height: 70}}>
+          <ProfileInfo count={postsCount} text={"Posts"} />
+          <ProfileInfo count={followersCount} text={"Followers"} />
+          <ProfileInfo count={followingCount} text={"Following"} />
         </View>
-        <PhotoGridView rowPhotos={3} photosUri={mediaURIs} style={{top: 30}} />
+        <PhotoGridView rowPhotos={3} photosURI={mediaURIs} />
       </View>
       <Avatar source={profilePicture} size={profileImageSize} containerStyle={{ position: "absolute", left: radius, top: coverImageHeight - profileImageSize / 2 - radius }} />
     </ScrollView>
